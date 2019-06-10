@@ -62,15 +62,15 @@ function centosversion(){
 
 #安装依赖库
 if [ "$OS" == 'CentOS' ]; then
-	yum install -y wget unzip openssl-devel gcc swig python python-devel python-setuptools autoconf libtool libevent git ntpdate
-	yum install -y m2crypto automake make curl curl-devel zlib-devel perl perl-devel cpio expat-devel gettext-devel
+    yum install -y wget unzip openssl-devel gcc swig python python-devel python-setuptools autoconf libtool libevent git ntpdate
+    yum install -y m2crypto automake make curl curl-devel zlib-devel perl perl-devel cpio expat-devel gettext-devel
 else
-	apt-get -y update
-	apt-get -y install python python-dev python-pip python-m2crypto curl wget unzip gcc swig automake make perl cpio build-essential git ntpdate
+    apt-get -y update
+    apt-get -y install python python-dev python-pip python-m2crypto curl wget unzip gcc swig automake make perl cpio build-essential git ntpdate
 fi
 
 #安装chacha20的依赖库
-wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/shadowsocks_install/master/libsodium-1.0.12.tar.gz
+wget -N --no-check-certificate https://raw.githubusercontent.com/leiy1988/shadowsocks_install/master/libsodium-1.0.12.tar.gz
 tar zfvx libsodium-1.0.12.tar.gz
 cd libsodium-1.0.12
 ./configure
@@ -84,7 +84,7 @@ cd /root/
 rm -rf libsodium-1.0.12.tar.gz libsodium-1.0.12
 
 #git安装ssr
-git clone https://github.com/shadowsocksr/shadowsocksr.git ${ssrdir}
+git clone https://github.com/leiy88/shadowsocksr.git ${ssrdir}
 cd ${ssrdir}
 bash setup_cymysql.sh
 bash initcfg.sh
@@ -94,15 +94,15 @@ sed -i "s/127.0.0.1/$myip/g" ${ssrdir}userapiconfig.py
 
 #下载服务文件，添加到系统服务，并随机启动
 if [ "$OS" == 'CentOS' ]; then
-	if ! wget --no-check-certificate https://raw.githubusercontent.com/91yun/shadowsocks_install/master/ssr -O /etc/init.d/ssr; then
-		echo "Failed to download ssr chkconfig file!"
-		exit 1
-	fi
+    if ! wget --no-check-certificate https://raw.githubusercontent.com/leiy1988/shadowsocks_install/master/ssr -O /etc/init.d/ssr; then
+        echo "Failed to download ssr chkconfig file!"
+        exit 1
+    fi
 else
-	if ! wget --no-check-certificate https://raw.githubusercontent.com/91yun/shadowsocks_install/master/ssr-debian -O /etc/init.d/ssr; then
-		echo "Failed to download ssr chkconfig file!"
-		exit 1
-	fi
+    if ! wget --no-check-certificate https://raw.githubusercontent.com/leiy1988/shadowsocks_install/master/ssr-debian -O /etc/init.d/ssr; then
+        echo "Failed to download ssr chkconfig file!"
+        exit 1
+    fi
 fi
 
 sed -i "s@BIN=.*@BIN=$ssrdir@g" /etc/init.d/ssr
@@ -113,16 +113,16 @@ cp /etc/init.d/ssr /bin/
 chmod +x /etc/init.d/ssr
 chmod +x /bin/ssr
 if [ "$OS" == 'CentOS' ]; then
-	chkconfig --add ssr
-	chkconfig ssr on
+    chkconfig --add ssr
+    chkconfig ssr on
 else
-	update-rc.d -f ssr defaults
+    update-rc.d -f ssr defaults
 fi
 
 #下载定制脚本到目录
-if ! wget --no-check-certificate https://raw.githubusercontent.com/91yun/shadowsocks_install/master/ssr.sh -O ${ssrdir}ssr.sh; then
-	echo "Failed to download ssr script file!"
-	exit 1
+if ! wget --no-check-certificate https://raw.githubusercontent.com/leiy1988/shadowsocks_install/master/ssr.sh -O ${ssrdir}ssr.sh; then
+    echo "Failed to download ssr script file!"
+    exit 1
 fi
 sed -i "s@ssrdir=.*@ssrdir=$ssrdir@g" ${ssrdir}ssr.sh
 
